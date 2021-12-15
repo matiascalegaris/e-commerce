@@ -11,6 +11,7 @@ import { setCurrentUser } from './redux/user/user.actions'
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from './redux/user/user.selector';
 import Checkout from './pages/checkout/checkout.component';
+import CollectionsOverview from "./components/collections-overview/collections-overview.component";
 
 class App extends React.Component {
 
@@ -48,10 +49,11 @@ class App extends React.Component {
     <div>
       <Header />
       <Routes>
-        <Route exact path='/' element={<HomePage/>} />
-        <Route path='/shop' element={<ShopPage/>} />
-        <Route exact path='/sigin' element={ redirect() } />
-        <Route exact path='/checkout' element= {<Checkout/>} />
+        <Route path='/' element={<HomePage/>} />
+        <Route path="shop/" element={<CollectionsOverview />} />
+        <Route path='/shop/*' element={<ShopPage/>} />
+        <Route path='/sigin' element={ redirect() } />
+        <Route path='/checkout' element= {<Checkout/>} />
       </Routes>
     </div>
   );
