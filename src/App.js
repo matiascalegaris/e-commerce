@@ -11,7 +11,6 @@ import { setCurrentUser } from './redux/user/user.actions'
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from './redux/user/user.selector';
 import Checkout from './pages/checkout/checkout.component';
-import CollectionsOverview from "./components/collections-overview/collections-overview.component";
 
 class App extends React.Component {
 
@@ -50,7 +49,6 @@ class App extends React.Component {
       <Header />
       <Routes>
         <Route path='/' element={<HomePage/>} />
-        <Route path="shop/" element={<CollectionsOverview />} />
         <Route path='/shop/*' element={<ShopPage/>} />
         <Route path='/sigin' element={ redirect() } />
         <Route path='/checkout' element= {<Checkout/>} />
@@ -61,11 +59,11 @@ class App extends React.Component {
 }
 
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
 })
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  setCurrentUser: user => dispatch(setCurrentUser(user)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

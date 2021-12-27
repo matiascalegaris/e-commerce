@@ -1,11 +1,10 @@
 import React from "react";
-import './menu-button.styles.scss'
+import {MenuButtonContainer} from './menu-button.styles.jsx'
 
-const MenuButton = ({children, isGoogleSignIn, inverted, ...otherProps} ) => (
-  <button className={`${inverted ? 'inverted' : '' } ${isGoogleSignIn ? 'google-sign-in' : '' } menu-button`} 
-  {...otherProps} >
+const MenuButton = ({children, ...otherProps} ) => (
+  <MenuButtonContainer {...otherProps} >
     {children}
-  </button>
+  </MenuButtonContainer>
 )
 
 export default MenuButton;
