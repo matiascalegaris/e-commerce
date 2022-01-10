@@ -3,32 +3,23 @@ import { connect } from "react-redux";
 import { Route, Routes } from 'react-router-dom';
 import CollectionsOverview from "../../components/collections-overview/collections-overview.component";
 import WithSpinner from "../../components/with-spinner/with-spinner.component";
-import { convertCollectionSnapshotToMap, firestore } from "../../firebase/firebase.utils";
-import { updateCollection } from "../../redux/shop/shop.actions";
+import { fetchCollectionStart } from "../../redux/shop/shop.actions";
+import { selectIsCollectionFetching, selectIsCollectionLoaded } from "../../redux/shop/shop.selector"
 import Collection from "../collection/collection.component";
+import { createStructuredSelector } from "reselect";
 
 const CollectionWithSpinner = WithSpinner(Collection);
 const CollectionOverviewWithSpinner = WithSpinner(CollectionsOverview);
 
 class ShopPage extends React.Component {
-  state = {
-    loading: true
-  };
-
-  unsubscribeFromSnapshot = null;
 
   componentDidMount() {
-    const collectionRef = firestore.collection('collections');
-    const { updateCollection } = this.props;
-    this.unsubscribeFromSnapshot = collectionRef.onSnapshot( async snapshot => {
-      const collections = convertCollectionSnapshotToMap(snapshot);
-      updateCollection(collections);
-      this.setState( {loading: false});
-    });
-  };
-
+    const { fetchCollectionStart } = this.props;
+    fetchCollectionStart();
+  }
   render() {
-    const { loading} = this.state;
+    const {isFetching, isCollectionLoaded} = this.props;
+    const loading = isFetching || !isCollectionLoaded;
     return ( 
       <div className='shop-page'> 
       <Routes>
@@ -40,8 +31,15 @@ class ShopPage extends React.Component {
   }
 };
 
+const mapStateToProps = createStructuredSelector({
+  isFetching: selectIsCollectionFetching,
+  isCollectionLoaded: selectIsCollectionLoaded
+}
+
+)
+
 const mapDispatchToProps = dispatch => ({
-  updateCollection: collection => dispatch(updateCollection(collection))
+  fetchCollectionStart: () => dispatch(fetchCollectionStart())
 })
 
-export default connect(null, mapDispatchToProps)(ShopPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ShopPage);

@@ -3,7 +3,7 @@ import './collection.styles.scss'
 import CollectionItem from '../../components/collection-item/collection-item.component'
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
-import { selectedCollection, selectCollections } from "../../redux/shop/shop.selector";
+import { selectedCollection } from "../../redux/shop/shop.selector";
 
 
 const Collection = () => {

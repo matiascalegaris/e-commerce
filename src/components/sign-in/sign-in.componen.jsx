@@ -2,7 +2,8 @@ import React from "react";
 import FormInput from "../form-input/form-imput.component";
 import MenuButton from "../menu-button/menu-button.component";
 import './sign-in.styles.scss'
-import { auth, signInWithGoogle } from '../../firebase/firebase.utils'
+import { connect } from "react-redux";
+import { googleSignInStart, emailSignInStart } from "../../redux/user/user.actions";
 
 class SignIn extends React.Component {
 
@@ -14,18 +15,12 @@ class SignIn extends React.Component {
     }
   }
 
-  handleSubmit = async event => {
+  handleSubmit = (event) => {
     event.preventDefault();
-
     const {email, password } = this.state;
-
-    try {
-      await auth.signInWithEmailAndPassword(email, password);
-      this.state( {email: '', password:''});
-    } catch(error) {
-      console.log(error);
-    }
-
+    const { emailSignInStart } = this.props;
+    
+    emailSignInStart(email, password);
     this.setState({email:'', password:''});
   }
 
@@ -35,17 +30,27 @@ class SignIn extends React.Component {
   }
 
   render() {
+    const { googleSignInStart } = this.props;
     return (
       <div className='sign-in'>
         <h2 className='title'>I alreade have an account</h2>
         <span>Sign in with your email and password</span>
 
-        <form onSubmit={this.handleSubmit}>
+        <form>
           <FormInput name="email" type="email" label='Email' value={this.state.email} required handleChange={this.handleChange} />
           <FormInput name="password" type="´password" label='Password' value={this.state.password} required handleChange={this.handleChange} />
           <div className='buttons'>
-            <MenuButton type='submit' value='Submit Form'> Sign in</MenuButton>
-            <MenuButton onClick={signInWithGoogle} type='button' value='Submit Form' isGoogleSignIn> Sign in With Google</MenuButton>
+            <MenuButton 
+              type='button'
+              value='Submit Form'
+              onClick={this.handleSubmit} 
+            > Sign in</MenuButton>
+            <MenuButton 
+              type='button' 
+              onClick={googleSignInStart} 
+              value='Submit Form' 
+              isGoogleSignIn
+            > Sign in With Google</MenuButton>
           </div>
         </form>
       </div>
@@ -53,4 +58,8 @@ class SignIn extends React.Component {
   }
 }
 
-export default SignIn;
+const mapDispatchToProps = dispatch => ({
+  googleSignInStart : () =>  dispatch(googleSignInStart()),
+  emailSignInStart : ( email, password ) => dispatch(emailSignInStart({ email, password}))
+})
+export default connect(null, mapDispatchToProps)(SignIn);
