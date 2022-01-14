@@ -1,7 +1,7 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import HomePage from './pages/homepage/homepage.component'
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
@@ -11,35 +11,19 @@ import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from './redux/user/user.selector';
 import Checkout from './pages/checkout/checkout.component';
 
-class App extends React.Component {
+const App = () => {
+  const currentUser = useSelector(selectCurrentUser);
+  const dispatch  = useDispatch();
+  
+  useEffect( ()=> {
+    dispatch(checkUserSession());
+  }, [dispatch]);
 
-  unsubscribeFromAuth = null;
-
-  componentDidMount() {
-    const { checkUserSession } = this.props;
-    checkUserSession();
-    // this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-    //   if (userAuth) {
-    //     const userRef = await createUserProfileDocument(userAuth);
-    //     userRef.onSnapshot( snapshot => {
-    //       setCurrentUser({
-    //         id: snapshot.id,
-    //         ...snapshot.data()
-    //       })
-    //     });
-    //   }
-    //   else {
-    //     setCurrentUser(userAuth);
-    //   }
-    // });
-  }
-
-  render() {
   const redirect = () => {
-    return this.props.currentUser ? 
+    return currentUser ? 
           (<Navigate to='/'/>) : 
           (<SignInAndSignup/>)
-  }
+  } 
   return (
     <div>
       <Header />
@@ -51,15 +35,7 @@ class App extends React.Component {
       </Routes>
     </div>
   );
-  }
+
 }
 
-const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser,
-})
-
-const mapDispatchToProps = dispatch => ({
-  checkUserSession: () => dispatch(checkUserSession())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

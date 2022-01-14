@@ -2,18 +2,19 @@ import React, {useState} from "react";
 import FormInput from "../form-input/form-imput.component";
 import MenuButton from "../menu-button/menu-button.component";
 import './sign-in.styles.scss'
-import { connect } from "react-redux";
 import { googleSignInStart, emailSignInStart } from "../../redux/user/user.actions";
+import { useDispatch } from "react-redux";
 
-const SignIn = ({emailSignInStart, googleSignInStart}) => {
+const SignIn = () => {
 
   const [userCredentials, setCredentials] = useState({email:'', password:''});
   const {email, password } = userCredentials;
-  
+  const dispatch = useDispatch();
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    emailSignInStart(email, password);
+    dispatch(emailSignInStart({email, password}));
     setCredentials({email:'', password:''});
   }
 
@@ -38,7 +39,7 @@ const SignIn = ({emailSignInStart, googleSignInStart}) => {
           > Sign in</MenuButton>
           <MenuButton 
             type='button' 
-            onClick={googleSignInStart} 
+            onClick={ () => dispatch(googleSignInStart())} 
             value='Submit Form' 
             isGoogleSignIn
           > Sign in With Google</MenuButton>
@@ -48,8 +49,4 @@ const SignIn = ({emailSignInStart, googleSignInStart}) => {
   )
 }
 
-const mapDispatchToProps = dispatch => ({
-  googleSignInStart : () =>  dispatch(googleSignInStart()),
-  emailSignInStart : ( email, password ) => dispatch(emailSignInStart({ email, password}))
-})
-export default connect(null, mapDispatchToProps)(SignIn);
+export default SignIn;
